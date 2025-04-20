@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Romeinse Geneeskunde Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f3f3;
+      margin: 0;
+      padding: 2rem;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 0;
+    }
+    .question {
+      margin-bottom: 1.5rem;
+    }
+    .answers label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .result {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-left: 4px solid #4caf50;
+      background: #e8f5e9;
+      display: none;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h2>Romeinse Geneeskunde Quiz</h2>
+    <form id="quiz-form"></form>
+    <button onclick="checkAnswers()">Check Antwoorden</button>
+    <div id="results"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        vraag: "1. Wie was Galenus binnen het Romeinse rijk?",
+        opties: [
+          "A) Een inheemse Romeinse arts die keizerlijke patiënten behandelde",
+          "B) Een Griekse arts en filosoof die werkte in dienst van de Romeinse elite",
+          "C) Een arts die experimenteerde met kruiden in de Egyptische provincie",
+          "D) Een militair chirurg die veldslagen medisch documenteerde"
+        ],
+        correct: "B",
+        uitleg: "Galenus, afkomstig uit Pergamon, werkte in Rome en behandelde o.a. keizer Marcus Aurelius. Hij combineerde praktische geneeskunde met filosofie."
+      },
+      {
+        vraag: "2. Waarin onderscheidde Celsus zich van andere medische auteurs uit zijn tijd?",
+        opties: [
+          "A) Hij verrichtte anatomisch onderzoek op mensen",
+          "B) Hij baseerde zijn werk op Etruskische medische tradities",
+          "C) Hij schreef een breed toegankelijke medische encyclopedie in het Latijn",
+          "D) Hij ontwikkelde nieuwe chirurgische instrumenten"
+        ],
+        correct: "C",
+        uitleg: "De Medicina van Celsus was één van de weinige medische werken in het Latijn, bedoeld voor een breed publiek en niet enkel artsen."
+      },
+      {
+        vraag: "3. Wat hield de humorenleer in, zoals Galenus die toepaste?",
+        opties: [
+          "A) Een astrologisch systeem om ziektes op te sporen",
+          "B) Een theorie gebaseerd op bloedgroepen",
+          "C) Een balansmodel tussen vier lichaamssappen met invloed op (psychische) gezondheid",
+          "D) Een leer die focuste op hygiëne"
+        ],
+        correct: "C",
+        uitleg: "De vier humoren (bloed, slijm, zwarte gal, gele gal) moesten in evenwicht zijn om gezond te blijven."
+      },
+      {
+        vraag: "4. Waarom werd Galenus' werk zo invloedrijk in de middeleeuwen?",
+        opties: [
+          "A) Zijn experimenten werden als revolutionair gezien",
+          "B) Hij werd als autoriteit beschouwd binnen het christelijk geloof",
+          "C) Zijn geschriften werden in medische handboeken opgenomen",
+          "D) Hij ontdekte geneeskrachtige planten die eeuwenlang werden gebruikt"
+        ],
+        correct: "C",
+        uitleg: "Door zijn rationele benadering konden zijn geschriften goed gebruikt worden in handboeken."
+      },
+      {
+        vraag: "5. Wat gebeurde er met het werk van Celsus tijdens de renaissance?",
+        opties: [
+          "A) Het werd vergeten, alleen het werk van Galenus werd verder gebruikt",
+          "B) Chinese artsen ontdekten het werk en namen het mee op in de Chinese geneeskunde",
+          "C) Het werd herontdekt via manuscripten en verspreid dankzij de boekdrukkunst",
+          "D) Het inspireerde de Arabische geneeskunde tot anatomisch onderzoek"
+        ],
+        correct: "C",
+        uitleg: "Zijn werk werd in de 15e eeuw herontdekt en gedrukt, waardoor het een invloedrijk naslagwerk werd tijdens de Renaissance."
+      },
+      {
+        vraag: "6. Hoe kwam Galenus tot zijn anatomische kennis, ondanks verboden op dissectie van mensen?",
+        opties: [
+          "A) Hij reisde naar India om daar te leren",
+          "B) Hij onderzocht slachtoffers van oorlogen",
+          "C) Hij observeerde gladiatoren en dissecteerde dieren zoals apen",
+          "D) Hij kreeg speciale toestemming van de keizer voor menselijke dissecties"
+        ],
+        correct: "C",
+        uitleg: "Galenus baseerde zich op dierlijke anatomie, wat tot fouten leidde, maar was toen één van de weinigen die op een systematische manier aan onderzoek deed."
+      },
+      {
+        vraag: "7. Wat was een belangrijke beperking van chirurgie in de Romeinse tijd?",
+        opties: [
+          "A) Verbod op chirurgie door de keizer",
+          "B) Ontbreken van kennis over zenuwbanen",
+          "C) Geen beschikbaarheid van sterilisatie en verdoving",
+          "D) Exclusief voorbehouden aan priesters en dus beperkt toegankelijk"
+        ],
+        correct: "C",
+        uitleg: "Zonder verdoving en steriele omstandigheden kon chirurgie snel fataal aflopen — het was een laatste redmiddel."
+      },
+      {
+        vraag: "8. Welke medische denkwijze, ontleend aan Galenus, is vandaag nog herkenbaar?",
+        opties: [
+          "A) Het idee dat ziekten worden veroorzaakt door goddelijke straffen (hybris en pthonos)",
+          "B) Het rationeel bekijken van de symptomen om tot een diagnose te komen",
+          "C) De koppeling van astrologie aan behandelingen",
+          "D) De overtuiging dat bloedzuiging altijd genezing bevordert"
+        ],
+        correct: "B",
+        uitleg: "Het logisch analyseren van symptomen vormt nog steeds de basis om tot een diagnose te komen."
+      },
+      {
+        vraag: "9. Wat is een blijvende invloed van de Romeinse geneeskunde op volksgezondheid?",
+        opties: [
+          "A) Het uitgebalanceerd dieet op basis van exclusieve kruiden",
+          "B) Het principe van openbare ziekenhuizen",
+          "C) Hygiënemaatregelen zoals riolering, aquaducten en badhuizen",
+          "D) Het gebruik van morfine in pijnstilling"
+        ],
+        correct: "C",
+        uitleg: "Romeinse infrastructuur zoals aquaducten en riolering was revolutionair voor de volksgezondheid."
+      },
+      {
+        vraag: "10. Welke medische vergissing van Galenus bleef eeuwenlang onbetwist?",
+        opties: [
+          "A) De opvatting dat het hart geen bloed bevatte",
+          "B) De aanname dat de lever het bloed verpompt",
+          "C) Zijn overtuiging dat zenuwen gevuld zijn met lucht",
+          "D) De bewering dat gal als krachtbron diende voor de hersenen"
+        ],
+        correct: "B",
+        uitleg: "Galenus dacht dat de lever bloed produceerde en het via aders verspreidde. Dit werd pas in de 17e eeuw weerlegd door William Harvey."
+      },
+      {
+        vraag: "11. Waarom werd Celsus soms niet als echte arts beschouwd door latere geleerden?",
+        opties: [
+          "A) Hij weigerde praktische ingrepen te beschrijven",
+          "B) Zijn werk was een verzameling van kennis, geen eigen observatie",
+          "C) Hij baseerde zich uitsluitend op magische rituelen",
+          "D) Er bleven slechts fragmenten van zijn werk over"
+        ],
+        correct: "B",
+        uitleg: "Celsus wordt vaak gezien als een geleerde/verzamelaar van kennis, niet als een praktiserend arts."
+      },
+      {
+        vraag: "12. Welke Romeinse medische praktijk heeft het meest bijgedragen aan chirurgische precisie?",
+        opties: [
+          "A) Het standaardiseren van kruidenmengsels",
+          "B) Het gebruik van amuletten bij operaties",
+          "C) De behandeling van wonden bij gladiatoren",
+          "D) De dissectie van dieren"
+        ],
+        correct: "C",
+        uitleg: "Artsen zoals Galenus konden door het behandelen van gladiatoren veel leren over interne structuren en wonden."
+      }
+    ];
+
+    const form = document.getElementById("quiz-form");
+
+    quizData.forEach((q, index) => {
+      const qElem = document.createElement("div");
+      qElem.classList.add("question");
+
+      qElem.innerHTML = `
+        <p><strong>${q.vraag}</strong></p>
+        <div class="answers">
+          ${q.opties.map((opt, i) => `
+            <label>
+              <input type="radio" name="q${index}" value="${opt.charAt(0)}" />
+              ${opt}
+            </label>
+          `).join("")}
+        </div>
+        <div class="result" id="result-${index}"></div>
+      `;
+      form.appendChild(qElem);
+    });
+
+    function checkAnswers() {
+      quizData.forEach((q, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        const resultElem = document.getElementById(`result-${index}`);
+        if (selected) {
+          const isCorrect = selected.value === q.correct;
+          resultElem.style.display = "block";
+          resultElem.innerHTML = isCorrect
+            ? `<strong>Goed!</strong> ${q.uitleg}`
+            : `<strong>Fout.</strong> ${q.uitleg}`;
+          resultElem.style.borderLeftColor = isCorrect ? "#4caf50" : "#f44336";
+          resultElem.style.background = isCorrect ? "#e8f5e9" : "#fdecea";
+        } else {
+          resultElem.innerHTML = `<strong>Kies een antwoord!</strong>`;
+          resultElem.style.display = "block";
+        }
+      });
+    }
+  </script>
+</body>
+</html>
